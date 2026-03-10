@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thiago Von Zuben Martinez</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #0d9488;
+      --teal-light: #99f6e4;
+      --teal-mid: #2dd4bf;
+      --teal-dark: #0f766e;
+      --white: #ffffff;
+      --off-white: #f8fffe;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--gray-800);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--teal-dark);
+      letter-spacing: 0.01em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-600);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 5rem 4rem;
+      gap: 4rem;
+      background: var(--off-white);
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -120px;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(45,212,191,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 10%;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(13,148,136,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-text { position: relative; z-index: 2; }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.05;
+      color: var(--gray-900);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.4s;
+    }
+    .hero-name span { color: var(--teal); }
+    .hero-tagline {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: var(--gray-600);
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.6s;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.8s;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      padding: 0.75rem 1.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); }
+    .btn-outline {
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      padding: 0.75rem 1.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: var(--teal); color: #fff; transform: translateY(-2px); }
+
+    .hero-photo-wrap {
+      display: flex; justify-content: center; align-items: center;
+      position: relative; z-index: 2;
+      opacity: 0;
+      animation: fadeIn 0.9s ease forwards 0.5s;
+    }
+    .hero-photo-ring {
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 20px 60px rgba(13,148,136,0.25);
+    }
+    .hero-photo-inner {
+      width: 330px; height: 330px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-photo-inner img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-photo-placeholder {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      color: var(--teal-dark);
+      user-select: none;
+    }
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 1s;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--teal);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 5rem; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+    }
+    .section-divider {
+      width: 48px; height: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--gray-600);
+      margin-bottom: 1.4rem;
+    }
+    .about-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .about-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .about-card:hover { border-color: var(--teal-mid); transform: translateX(4px); }
+    .about-card-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .about-card-title { font-weight: 500; font-size: 0.9rem; color: var(--gray-800); }
+    .about-card-sub { font-size: 0.82rem; color: var(--gray-400); margin-top: 2px; }
+
+    /* ── EXPERIENCE ── */
+    #experience { background: var(--gray-50); }
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 160px 1px 1fr;
+      gap: 0 2rem;
+      position: relative;
+    }
+    .timeline-date {
+      text-align: right;
+      padding-top: 0.2rem;
+      padding-bottom: 2.5rem;
+    }
+    .timeline-date-range {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.04em;
+    }
+    .timeline-date-loc {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      margin-top: 3px;
+    }
+    .timeline-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .timeline-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px var(--teal);
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .timeline-connector {
+      flex: 1;
+      width: 2px;
+      background: var(--gray-200);
+      margin-top: 6px;
+    }
+    .timeline-item:last-child .timeline-connector { display: none; }
+    .timeline-content { padding-bottom: 2.5rem; }
+    .timeline-role {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gray-900);
+      margin-bottom: 0.2rem;
+    }
+    .timeline-company {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--teal-dark);
+      margin-bottom: 0.9rem;
+      letter-spacing: 0.03em;
+    }
+    .timeline-bullets { list-style: none; }
+    .timeline-bullets li {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+      padding-left: 1.1rem;
+      position: relative;
+      margin-bottom: 0.4rem;
+    }
+    .timeline-bullets li::before {
+      content: '→';
+      position: absolute; left: 0;
+      color: var(--teal-mid);
+      font-size: 0.75rem;
+      top: 3px;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--white); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-card {
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 1.8rem;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .skill-card:hover {
+      border-color: var(--teal-mid);
+      box-shadow: 0 8px 32px rgba(13,148,136,0.1);
+      transform: translateY(-3px);
+    }
+    .skill-card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .skill-card-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--gray-900);
+      margin-bottom: 0.6rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-tag {
+      background: var(--gray-100);
+      color: var(--gray-700, #374151);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+    }
+    .skill-tag:hover { background: var(--teal-light); color: var(--teal-dark); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--gray-900);
+      color: var(--white);
+    }
+    #contact .section-title { color: var(--white); }
+    #contact .section-label { color: var(--teal-mid); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-intro {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 2.5rem;
+    }
+    .contact-items { display: flex; flex-direction: column; gap: 1rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .contact-item-icon {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: rgba(45,212,191,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-item a, .contact-item span {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-item a:hover { color: var(--teal-mid); }
+    .contact-cta-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2.5rem;
+    }
+    .contact-cta-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--white);
+    }
+    .contact-cta-box p {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.75;
+      margin-bottom: 1.8rem;
+    }
+    .btn-teal {
+      display: inline-block;
+      background: var(--teal);
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-teal:hover { background: var(--teal-dark); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--gray-900);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 2rem 5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer span { font-size: 0.82rem; color: rgba(255,255,255,0.3); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 3rem; }
+      .hero-photo-wrap { display: none; }
+      section { padding: 4rem 2rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .timeline-item { grid-template-columns: 100px 1px 1fr; }
+      nav { padding: 0 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TVM</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Finance Student · Rutgers University</p>
+    <h1 class="hero-name">Thiago<br/>Von Zuben <span>Martinez</span></h1>
+    <p class="hero-tagline">Aspiring finance professional with a passion for blockchain technology, leadership experience, and a multilingual edge in today's global market.</p>
+    <div class="hero-cta">
+      <a href="#experience" class="btn-primary">View Experience</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">3.5</div>
+        <div class="stat-label">GPA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Languages</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Years Work Exp</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-photo-wrap">
+    <div class="hero-photo-ring">
+      <div class="hero-photo-inner">
+        <!-- Replace 'your-photo.jpg' with your actual photo filename -->
+        <img src="your-photo.jpg" alt="Thiago Von Zuben Martinez"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="hero-photo-placeholder" style="display:none;">T</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="reveal">
+    <p class="section-label">Who I Am</p>
+    <h2 class="section-title">About Me</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>I'm a Finance student at Rutgers Business School (Class of 2028) with a strong academic foundation in accounting, economics, and statistics — and a GPA of 3.5.</p>
+      <p>Beyond the classroom, I bring real-world experience in team leadership, customer service, and emergency response. Whether managing high-pressure situations as a lifeguard or streamlining operations as a counter server, I've developed a professional mindset built on reliability, communication, and calm under pressure.</p>
+      <p>I'm actively exploring the intersection of finance and technology through Rutgers' Blockchain Club, and I channel my creativity through music production, film, and design. I'm fluent in Portuguese and English, with conversational Spanish — giving me a naturally global perspective.</p>
+    </div>
+    <div class="about-cards">
+      <div class="about-card">
+        <div class="about-card-icon">🎓</div>
+        <div>
+          <div class="about-card-title">Rutgers Business School</div>
+          <div class="about-card-sub">B.S. Finance · Graduating 2028 · GPA 3.5</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🌎</div>
+        <div>
+          <div class="about-card-title">Multilingual</div>
+          <div class="about-card-sub">Fluent: English & Portuguese · Conversational: Spanish</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🏊</div>
+        <div>
+          <div class="about-card-title">Competitive Swimmer</div>
+          <div class="about-card-sub">Discipline & endurance on and off the pool deck</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🎸</div>
+        <div>
+          <div class="about-card-title">Music & Creative Arts</div>
+          <div class="about-card-sub">Guitar, music production, film, and fashion</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🤝</div>
+        <div>
+          <div class="about-card-title">Community Volunteer</div>
+          <div class="about-card-sub">Tom's Kitchen — providing meals for the homeless</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="reveal">
+    <p class="section-label">My Journey</p>
+    <h2 class="section-title">Experience</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-date">
+        <div class="timeline-date-range">2025 – Present</div>
+        <div class="timeline-date-loc">New Brunswick, NJ</div>
+      </div>
+      <div class="timeline-line">
+        <div class="timeline-dot"></div>
+        <div class="timeline-connector"></div>
+      </div>
+      <div class="timeline-content">
+        <div class="timeline-role">Member</div>
+        <div class="timeline-company">Blockchain Club — Rutgers University</div>
+        <ul class="timeline-bullets">
+          <li>Studying blockchain fundamentals and the growing role of cryptocurrency in modern markets</li>
+          <li>Hands-on lessons in buying, selling, and analyzing digital currencies</li>
+          <li>Weekly meetings with guest speakers from the financial and tech industries</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-date">
+        <div class="timeline-date-range">2022 – 2025</div>
+        <div class="timeline-date-loc">Ridgewood, NJ</div>
+      </div>
+      <div class="timeline-line">
+        <div class="timeline-dot"></div>
+        <div class="timeline-connector"></div>
+      </div>
+      <div class="timeline-content">
+        <div class="timeline-role">Lifeguard</div>
+        <div class="timeline-company">Graydon Pool</div>
+        <ul class="timeline-bullets">
+          <li>Led daily emergency response drills — missing children, spinal injuries, drowning scenarios — improving team reaction time by 30%</li>
+          <li>Monitored patrons and enforced safety protocols in a high-traffic public environment</li>
+          <li>Resolved patron conflicts calmly and professionally, maintaining safety and positive public relations</li>
+          <li>Maintained physical conditioning through regular running and swimming routines</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-date">
+        <div class="timeline-date-range">2023 – 2024</div>
+        <div class="timeline-date-loc">Ridgewood, NJ</div>
+      </div>
+      <div class="timeline-line">
+        <div class="timeline-dot"></div>
+        <div class="timeline-connector"></div>
+      </div>
+      <div class="timeline-content">
+        <div class="timeline-role">Counter Server</div>
+        <div class="timeline-company">Bibillia</div>
+        <ul class="timeline-bullets">
+          <li>Managed daily inventory of 50+ items, ensuring seamless and uninterrupted service flow</li>
+          <li>Provided attentive table service and processed payments via POS systems</li>
+          <li>Communicated proactively with management regarding stock shortages and service issues</li>
+          <li>Performed opening and closing duties including equipment cleaning, prep, and labeling</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="reveal">
+    <p class="section-label">What I Bring</p>
+    <h2 class="section-title">Skills & Certifications</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">💹</div>
+      <div class="skill-card-title">Finance & Business</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Accounting</span>
+        <span class="skill-tag">Macroeconomics</span>
+        <span class="skill-tag">Microeconomics</span>
+        <span class="skill-tag">Statistics</span>
+        <span class="skill-tag">Calculus</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">⛓️</div>
+      <div class="skill-card-title">Technology & Blockchain</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Photoshop</span>
+        <span class="skill-tag">Blockchain</span>
+        <span class="skill-tag">Cryptocurrency</span>
+        <span class="skill-tag">Comp Apps</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🗣️</div>
+      <div class="skill-card-title">Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag">English (Fluent)</span>
+        <span class="skill-tag">Portuguese (Fluent)</span>
+        <span class="skill-tag">Spanish (Conversational)</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🚑</div>
+      <div class="skill-card-title">Certifications</div>
+      <div class="skill-tags">
+        <span class="skill-tag">First Aid</span>
+        <span class="skill-tag">CPR Certified</span>
+        <span class="skill-tag">Emergency Response</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🤝</div>
+      <div class="skill-card-title">Soft Skills</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Leadership</span>
+        <span class="skill-tag">Team Communication</span>
+        <span class="skill-tag">Conflict Resolution</span>
+        <span class="skill-tag">Problem Solving</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <div class="skill-card-icon">🎨</div>
+      <div class="skill-card-title">Creative & Personal</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Music Production</span>
+        <span class="skill-tag">Guitar</span>
+        <span class="skill-tag">Film</span>
+        <span class="skill-tag">Fashion</span>
+        <span class="skill-tag">Hiking</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">Let's Connect</p>
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="section-divider" style="background: var(--teal-mid);"></div>
+  </div>
+  <div class="contact-grid reveal">
+    <div>
+      <p class="contact-intro">Whether you're looking to connect professionally, discuss opportunities, or just say hello — I'd love to hear from you.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <a href="mailto:thiagovonzubenmartinez@gmail.com">thiagovonzubenmartinez@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <span>201-747-7922</span>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <span>Ridgewood, NJ</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-cta-box">
+      <h3>Open to Opportunities</h3>
+      <p>I'm actively seeking internships and part-time roles in finance, fintech, and business strategy. Let's build something together.</p>
+      <a href="mailto:thiagovonzubenmartinez@gmail.com" class="btn-teal">Send a Message</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Thiago Von Zuben Martinez</span>
+  <span>Built with Claude AI · Rutgers Business School</span>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
